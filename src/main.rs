@@ -46,13 +46,16 @@ fn view_log() -> eyre::Result<()> {
     for subject in list {
         println!(
             "Name: {}, Count: {}, Reasons: {:?}",
-            subject.name, subject.count, subject.reasons
+            subject.name,
+            subject.reasons.len(),
+            subject.reasons
         );
     }
     Ok(())
 }
 
 fn add_to_list(name: String, reason: String) -> eyre::Result<()> {
+    // std::fs::File::create("/home/mott/.smh")?;
     let mut existing_subjects: HashMap<String, Subject>;
 
     if let Ok(subjects_list) = retention::check_existing_subjects() {
@@ -63,8 +66,8 @@ fn add_to_list(name: String, reason: String) -> eyre::Result<()> {
 
     if existing_subjects.contains_key(&name) {
         let target_subject = existing_subjects.get_mut(&name).unwrap();
-        let updated_subject: Subject = Subject::update(target_subject, &reason);
-        existing_subjects.insert(name.to_string(), updated_subject);
+        Subject::update(target_subject, &reason);
+        // existing_subjects.insert(name.to_string(), target_subject);
     } else {
         let new_subject = subjects::Subject::new(&name.to_string(), &reason.to_string());
         existing_subjects.insert(name.to_string(), new_subject);

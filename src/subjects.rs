@@ -18,14 +18,14 @@ impl Subject {
 
     pub fn update(target: &mut Subject, reason: &str) -> Subject {
         let name = &target.name;
-        let count = target.count + 1;
+        let count: u8 = target.count + 1;
         target.reasons.push(reason.to_string());
         let reasons = &target.reasons;
 
         Self {
             name: name.to_string(),
             count,
-            reasons: reasons.to_owned(),
+            reasons: reasons.to_vec(),
         }
     }
 }

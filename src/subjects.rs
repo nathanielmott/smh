@@ -28,7 +28,7 @@ impl Subject {
         let count: u8 = target.count + 1;
         target
             .reasons
-            .insert(date_string, reason.to_owned().join(""));
+            .insert(date_string, reason.to_owned().join(" "));
         let reasons = &target.reasons;
 
         Self {
@@ -83,7 +83,7 @@ pub fn view_entry(name: String) -> eyre::Result<()> {
 pub fn parse_subject(args: Vec<String>) -> eyre::Result<()> {
     if let Some(index) = args.iter().position(|r| r == "for") {
         let (left, right) = args.split_at(index);
-        let name = &left[0];
+        let name = &left[0..];
         let reason = &right[1..];
         add_to_list(name, &reason)?;
         Ok(())
@@ -93,7 +93,7 @@ pub fn parse_subject(args: Vec<String>) -> eyre::Result<()> {
     }
 }
 
-fn add_to_list(name: &String, reason: &[String]) -> eyre::Result<()> {
+fn add_to_list(name: &[String], reason: &[String]) -> eyre::Result<()> {
     // std::fs::File::create("/home/mott/.smh")?;
     let mut existing_subjects: HashMap<String, Subject>;
 
@@ -103,16 +103,16 @@ fn add_to_list(name: &String, reason: &[String]) -> eyre::Result<()> {
         existing_subjects = HashMap::new();
     }
 
-    if existing_subjects.contains_key(name) {
-        let target_subject = existing_subjects.get_mut(name).unwrap();
+    if existing_subjects.contains_key(&name.join(" ")) {
+        let target_subject = existing_subjects.get_mut(&name.join(" ")).unwrap();
         Subject::update(target_subject, reason);
         // existing_subjects.insert(name.to_string(), target_subject);
     } else {
         let new_subject = Subject::new(
-            &name.to_string().to_lowercase(),
-            &reason.to_owned().join(""),
+            &name.join(" ").to_string().to_lowercase(),
+            &reason.to_owned().join(" "),
         );
-        existing_subjects.insert(name.to_string(), new_subject);
+        existing_subjects.insert(name.join(" ").to_string(), new_subject);
     }
 
     retention::write_to_file(existing_subjects)?;

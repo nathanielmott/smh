@@ -13,7 +13,7 @@ struct Cli {
 
 #[derive(Debug, Subcommand)]
 enum Commands {
-    Entry { name: String },
+    Entry { name: Vec<String> },
     At { text: Vec<String> },
     Log,
 }
@@ -22,7 +22,7 @@ fn main() -> eyre::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Some(Commands::Entry { name }) => subjects::view_entry(name),
+        Some(Commands::Entry { name }) => subjects::view_entry(name.join(" ")),
         Some(Commands::At { text }) => subjects::parse_subject(text),
         Some(Commands::Log) => subjects::view_log(),
         None => subjects::view_log(),

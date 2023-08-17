@@ -3,6 +3,7 @@ mod subjects;
 
 use crate::subjects::Subject;
 use clap::{Parser, Subcommand};
+use dirs;
 use serde_json::de;
 use std::collections::HashMap;
 

@@ -75,7 +75,7 @@ pub fn view_entry(name: String) -> eyre::Result<()> {
         );
         Ok(())
     } else {
-        println!("Couldn't find an entry with that name");
+        println!("Error: couldn't find an entry with that name");
         Ok(())
     }
 }
@@ -88,7 +88,24 @@ pub fn parse_subject(args: Vec<String>) -> eyre::Result<()> {
         add_to_list(name, &reason)?;
         Ok(())
     } else {
-        println!("please input a reason");
+        println!("Error: please input a reason");
+        Ok(())
+    }
+}
+
+pub fn remove_subject(name: String) -> eyre::Result<()> {
+    let mut path = dirs::home_dir().unwrap();
+    path.push(".smh");
+
+    let file_string = std::fs::read_to_string(&path)?;
+
+    let mut subjects: HashMap<String, Subject> = serde_json::de::from_str(&file_string)?;
+    if subjects.contains_key(&name) {
+        subjects.remove_entry(&name);
+        retention::write_to_file(subjects)?;
+        Ok(())
+    } else {
+        println!("Error: couldn't find that entry");
         Ok(())
     }
 }
@@ -106,7 +123,6 @@ fn add_to_list(name: &[String], reason: &[String]) -> eyre::Result<()> {
     if existing_subjects.contains_key(&name.join(" ")) {
         let target_subject = existing_subjects.get_mut(&name.join(" ")).unwrap();
         Subject::update(target_subject, reason);
-        // existing_subjects.insert(name.to_string(), target_subject);
     } else {
         let new_subject = Subject::new(
             &name.join(" ").to_string().to_lowercase(),

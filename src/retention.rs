@@ -9,10 +9,10 @@ pub fn check_or_create_file() -> eyre::Result<()> {
     let mut path = dirs::home_dir().unwrap();
     path.push(".smh");
 
-    if let Ok(_) = OpenOptions::new().create_new(true).open(path) {
+    if let Ok(_) = OpenOptions::new().read(true).write(true).open(&path) {
         Ok(())
     } else {
-        println!("Error: couldn't find or create database file");
+        std::fs::File::create(&path)?;
         Ok(())
     }
 }

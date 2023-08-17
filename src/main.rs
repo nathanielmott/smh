@@ -24,8 +24,9 @@ enum Commands {
 }
 
 fn main() -> eyre::Result<()> {
-    let cli = Cli::parse();
     retention::check_or_create_file()?;
+
+    let cli = Cli::parse();
 
     match cli.command {
         Some(Commands::Entry { name }) => subjects::view_entry(name.join(" ")),

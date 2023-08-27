@@ -1,6 +1,6 @@
 use crate::subjects::Subject;
-use dirs;
-use eyre;
+
+
 use serde_json::{de, ser};
 use std::collections::HashMap;
 use std::fs::OpenOptions;
@@ -35,6 +35,6 @@ pub fn write_to_file(list: HashMap<String, Subject>) -> eyre::Result<()> {
     path.push(".smh");
 
     let json_string = ser::to_string(&list)?;
-    std::fs::write(&path, &json_string)?;
+    std::fs::write(&path, json_string)?;
     Ok(())
 }

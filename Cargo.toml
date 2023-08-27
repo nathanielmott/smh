@@ -23,5 +23,3 @@ codegen-units = 1
 panic = "abort"
 opt-level = "z"
 
-[build]
-target = ["x86_64-unknown-linux-gnu"]

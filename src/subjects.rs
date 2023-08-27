@@ -85,7 +85,7 @@ pub fn parse_subject(args: Vec<String>) -> eyre::Result<()> {
         let (left, right) = args.split_at(index);
         let name = &left[0..];
         let reason = &right[1..];
-        add_to_list(name, &reason)?;
+        add_to_list(name, reason)?;
         Ok(())
     } else {
         println!("Error: please input a reason");
